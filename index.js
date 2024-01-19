@@ -86,7 +86,8 @@ const authenticateJWT = (req, res, next) => {
 
 // User registration
 app.post('/register', async (req, res) => {
-  const { username, password, role } = req.body;
+  try {
+    const { username, password, role } = req.body;
 
   // Sanitze and validate user input
   const sanitizedUsername = validator.escape(username);
@@ -107,6 +108,10 @@ app.post('/register', async (req, res) => {
 
   await newUser.save();
   res.status(201).send({ success: true });
+} catch (error) {
+  console.error('Registration error:', error);
+  res.status(500).send({ error: 'Internal Server Error' }); // Send a JSON response
+}
 });
 
 // User login
